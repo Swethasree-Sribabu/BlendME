@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BlendME: A VR Blendshape Microexpression Dataset</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;500;600&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-size: 19px;
+  line-height: 1.75;
+  color: #222;
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: #1a56c4; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.page { max-width: 860px; margin: 0 auto; padding: 0 2rem; }
+
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  background: #fff; border-bottom: 1px solid #e5e5e5;
+  z-index: 100;
+}
+nav .inner {
+  max-width: 860px; margin: 0 auto; padding: 0 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 52px;
+}
+nav .nav-title { font-size: 17px; font-weight: 600; color: #222; text-decoration: none; }
+nav ul { list-style: none; display: flex; gap: 1.75rem; }
+nav ul a { font-size: 16px; color: #555; text-decoration: none; }
+nav ul a:hover { color: #222; }
+
+#hero { padding: 5.5rem 0 2rem; text-align: center; border-top: none; }
+.venue { font-size: 17px; color: #555; margin-bottom: 0.75rem; }
+
+h1 {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: clamp(1.7rem, 3.5vw, 2.5rem);
+  font-weight: 600; line-height: 1.25; color: #111;
+  margin-bottom: 1.25rem;
+  max-width: 780px; margin-left: auto; margin-right: auto;
+}
+
+.authors { font-size: 18px; color: #222; margin-bottom: 0.4rem; }
+.authors sup { font-size: 11px; color: #1a56c4; }
+.affiliations { font-size: 16px; color: #555; margin-bottom: 1.75rem; }
+.affiliations sup { font-size: 11px; color: #1a56c4; }
+
+.links {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: 0.5rem 0.75rem; font-size: 16px;
+}
+.links a {
+  display: inline-block;
+  padding: 6px 18px;
+  border: 1px solid #1a56c4;
+  color: #1a56c4;
+  border-radius: 3px;
+  font-weight: 500;
+}
+.links a:hover { background: #f0f5ff; text-decoration: none; }
+.links .disabled {
+  display: inline-block;
+  padding: 6px 18px;
+  border: 1px solid #ddd;
+  color: #aaa;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+section { padding: 2.25rem 0; border-top: 1px solid #e5e5e5; }
+
+h2 {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 1.5rem; font-weight: 600;
+  color: #111; margin-bottom: 1rem;
+}
+
+p { margin-bottom: 0.9rem; color: #333; text-align: justify; }
+p:last-child { margin-bottom: 0; }
+/* hero and caption text stays centered/left */
+.venue, .authors, .affiliations { text-align: center; }
+
+.stats {
+  display: flex; flex-wrap: wrap;
+  border: 1px solid #ddd; margin: 1.5rem 0;
+}
+.stat {
+  flex: 1; min-width: 120px;
+  padding: 1rem 0.5rem; text-align: center;
+  border-right: 1px solid #ddd;
+}
+.stat:last-child { border-right: none; }
+.stat-n {
+  font-size: 1.7rem; font-weight: 600;
+  font-family: 'Source Serif 4', serif;
+  color: #111; line-height: 1;
+}
+.stat-l { font-size: 13.5px; color: #777; margin-top: 3px; }
+
+.figure { text-align: center; margin: 1.75rem 0; }
+.figure img { max-width: 100%; height: auto; border: 1px solid #ddd; }
+.figure.wide img { width: 100%; }
+.figure.medium img { width: 85%; }
+.figure.small img { width: 58%; }
+.figure.xsmall img { width: 48%; }
+figcaption {
+  font-size: 15px; color: #555; margin-top: 0.6rem;
+  max-width: 700px; margin-left: auto; margin-right: auto;
+  line-height: 1.55; text-align: left;
+}
+figcaption strong { color: #333; }
+
+ol.trm-steps { margin: 1rem 0; padding-left: 0; list-style: none; }
+ol.trm-steps li {
+  display: flex; gap: 0.75rem;
+  padding: 0.7rem 0; border-bottom: 1px solid #eee;
+  font-size: 18px;
+}
+ol.trm-steps li:last-child { border-bottom: none; }
+.step-n { font-weight: 600; color: #1a56c4; min-width: 22px; }
+.step-name { font-weight: 600; color: #111; min-width: 175px; }
+.step-text { color: #444; text-align: left; }
+
+table { width: 100%; border-collapse: collapse; font-size: 17px; margin: 1rem 0; }
+th {
+  text-align: left; padding: 8px 12px;
+  border-bottom: 2px solid #333;
+  font-size: 14px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.3px; color: #444;
+}
+td { padding: 7px 12px; border-bottom: 1px solid #e5e5e5; color: #333; }
+tr:last-child td { border-bottom: none; }
+.sig { color: #047857; font-weight: 600; }
+.near-sig { color: #b45309; }
+.mono { font-family: 'Source Code Pro', monospace; }
+tfoot td { font-size: 14px; color: #777; padding-top: 8px; border-top: 1px solid #ccc; }
+
+.dl-links { margin: 0.75rem 0; font-size: 18px; line-height: 2.1; }
+.dl-links .disabled { color: #aaa; }
+
+.citation {
+  background: #f7f7f7; border: 1px solid #ddd;
+  padding: 1rem 1.25rem; margin: 0.75rem 0;
+  font-family: 'Source Code Pro', monospace;
+  font-size: 14px; line-height: 1.7; color: #333;
+  overflow-x: auto; white-space: pre;
+}
+
+footer {
+  border-top: 1px solid #e5e5e5;
+  padding: 1.5rem 0; text-align: center;
+  font-size: 15px; color: #888;
+}
+
+@media (max-width: 640px) {
+  nav ul { display: none; }
+  h1 { font-size: 1.55rem; }
+  .figure.small img, .figure.xsmall img { width: 88%; }
+  .step-name { min-width: 120px; }
+  .links { gap: 0.4rem; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="inner">
+    <a class="nav-title" href="#hero">BlendME</a>
+    <ul>
+      <li><a href="#abstract">Abstract</a></li>
+      <li><a href="#dataset">Dataset</a></li>
+      <li><a href="#method">Method</a></li>
+      <li><a href="#results">Results</a></li>
+      <li><a href="#download">Download</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="page">
+
+<section id="hero" style="border-top:none; padding-top:5rem;">
+  <p class="venue">CVPR Workshop on Subtle Visual Computing (SVC) 2026</p>
+  <h1>BlendME: A VR Blendshape Microexpression Dataset with Retrospective Self-Annotation</h1>
+  <p class="authors">
+    <sup>1</sup>Swethasree Sribabu &nbsp;&nbsp;
+    <sup>2</sup>Vishnu Raj &nbsp;&nbsp;
+    <sup>2</sup>Gouthaman KV &nbsp;&nbsp;
+    <sup>1</sup>Manivannan Muniyandi
+  </p>
+  <p class="affiliations">
+    <sup>1</sup>Indian Institute of Technology Madras &nbsp;&nbsp;&nbsp;
+    <sup>2</sup>Dolby Laboratories
+  </p>
+  <div class="links">
+    <a href="YOUR_PAPER_LINK_HERE">[Paper]</a>
+    <a href="YOUR_VIDEO_LINK_HERE">[Video]</a>
+    <span class="disabled">[Code &mdash; coming soon]</span>
+    <span class="disabled">[Dataset &mdash; coming soon]</span>
+  </div>
+</section>
+
+<section id="abstract">
+  <h2>Abstract</h2>
+  <p>Microexpressions (MEs) are brief (40&ndash;500 ms), involuntary facial movements that reveal suppressed or concealed emotions. Existing ME datasets require high-speed cameras, expert FACS annotation, and tightly controlled laboratory conditions. We present <strong>BlendME</strong>, the first VR-native microexpression dataset captured using Meta Quest Pro face tracking, recording 70 blendshape activations at 45 Hz from 30 participants under a suppression paradigm.</p>
+  <p>We introduce a <strong>Temporal Residual Microactivation (TRM)</strong> pipeline to detect ME candidates from blendshape time series, and a retrospective self-annotation interface with avatar replay that replaces expert FACS coding. After quality filtering, the dataset yields 112 high-confidence ME clips from 21 participants across six basic emotions. Cross-dataset FACS AU validation against CASME II, SAMM, and SMIC confirms emotion-specific correspondence, with within-dataset separability (d&prime; = 0.96) exceeding established benchmarks (d&prime; = 0.72). The dataset, annotation tools, and translation pipeline will be released upon publication at <a href="https://swethasree-sribabu.github.io/BlendME/">swethasree-sribabu.github.io/BlendME</a>.</p>
+  <div class="stats">
+    <div class="stat"><div class="stat-n">112</div><div class="stat-l">ME clips</div></div>
+    <div class="stat"><div class="stat-n">21</div><div class="stat-l">Participants</div></div>
+    <div class="stat"><div class="stat-n">6</div><div class="stat-l">Emotions</div></div>
+    <div class="stat"><div class="stat-n">45 Hz</div><div class="stat-l">Capture rate</div></div>
+    <div class="stat"><div class="stat-n">63</div><div class="stat-l">Blendshape channels</div></div>
+    <div class="stat"><div class="stat-n">136 ms</div><div class="stat-l">Mean duration</div></div>
+  </div>
+</section>
+
+<section id="dataset">
+  <h2>Dataset</h2>
+  <p>BlendME was collected using Meta Quest Pro face tracking at 45 Hz. Participants viewed 14 validated emotion-elicitation stimuli targeting six emotions under a suppression paradigm. Blendshape time series were captured continuously alongside head pose, confidence scores, and phase labels. After the session, participants annotated detected activation peaks via a retrospective avatar-replay interface at a desktop workstation.</p>
+  <div class="figure wide">
+    <img src="images/pipeline.png" alt="Data collection pipeline">
+    <figcaption><strong>Figure 1.</strong> End-to-end data collection pipeline. Phase A: onboarding and headset setup. Phase B: VR experiment with 11-step calibration, neutral baseline, and 14 stimulus trials with in-session self-report. Phase C: retrospective self-annotation.</figcaption>
+  </div>
+  <p>The retrospective annotation interface displays TRM-detected activation peaks on a timeline alongside the stimulus video and an avatar replaying the participant&rsquo;s recorded blendshape activations. Participants assign an emotion label from 11 categories and an intensity rating for each peak.</p>
+  <div class="figure medium">
+    <img src="images/annotation_ui.png" alt="Retrospective annotation interface">
+    <figcaption><strong>Figure 4.</strong> Retrospective annotation interface. Left: trial list with completion status. Centre: stimulus video and timeline with detected key moments. Right: avatar expression heatmap. Bottom: emotion label buttons and intensity rating.</figcaption>
+  </div>
+</section>
+
+<section id="method">
+  <h2>Temporal Residual Microactivation (TRM)</h2>
+  <p>The Quest Pro applies internal smoothing that attenuates brief (40&ndash;500 ms) facial movements. TRM recovers these attenuated signals by analyzing how rapidly blendshape values change over time, operating independently on each of the 63 facial channels.</p>
+  <ol class="trm-steps">
+    <li><span class="step-n">1.</span><span class="step-name">Baseline subtraction</span><span class="step-text">Subtract per-participant resting state (mean during 60 s neutral baseline) from every frame, producing a deviation signal d(t).</span></li>
+    <li><span class="step-n">2.</span><span class="step-name">Temporal derivatives</span><span class="step-text">Compute velocity, acceleration, and jerk. MEs produce sharp acceleration spikes due to rapid onset, typically reaching peak intensity within 100 ms.</span></li>
+    <li><span class="step-n">3.</span><span class="step-name">Bandpass filtering</span><span class="step-text">Butterworth bandpass filter (2&ndash;25 Hz) isolates ME-frequency signals. The 2 Hz cutoff removes slow voluntary expressions; 25 Hz removes sensor noise.</span></li>
+    <li><span class="step-n">4.</span><span class="step-name">Temporal energy</span><span class="step-text">RMS over a 150 ms sliding window measures sustained activity. High energy indicates ME-speed movement over the preceding 150 ms.</span></li>
+    <li><span class="step-n">5.</span><span class="step-name">Event detection</span><span class="step-text">Adaptive threshold at 2 SD above per-channel mean energy. Peaks expanded to onset/offset and duration-gated to 40&ndash;500 ms.</span></li>
+  </ol>
+  <div class="figure small">
+    <img src="images/blendshape_schematic.png" alt="Blendshape ME schematic">
+    <figcaption><strong>Figure 6.</strong> Single microexpression in 1D blendshape format. Top-5 activated channels from the 70-dimensional blendshape vector. The event spans 333 ms (15 frames at 45 Hz) with characteristic asymmetric profile: rapid onset, slower return to baseline.</figcaption>
+  </div>
+</section>
+
+<section id="results">
+  <h2>Results</h2>
+  <p><strong>Emotion separability.</strong> BlendME achieves d&prime; = 0.96 on emotion-discriminative channels, exceeding the combined CASME II/SAMM/SMIC benchmark of d&prime; = 0.72. All-channel separability drops to d&prime; = 0.18 due to a hardware-level BrowLowerer artifact from headset pressure; removing this shared component recovers the discriminative result.</p>
+  <p><strong>FACS AU correspondence.</strong> Spearman rank correlation of mean AU activation vectors between BlendME and each reference dataset. Disgust achieves &rho; = +0.717 (p = 0.002) against CASME II ground-truth FACS annotations, confirming faithful capture of the canonical AU9/AU10 pattern. All per-dataset averages are positive.</p>
+  <table>
+    <thead>
+      <tr><th>Dataset</th><th>Emotion</th><th>&rho;</th><th>p</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td rowspan="5" style="vertical-align:top;padding-top:8px;font-weight:600;">CASME II<br><small style="font-weight:400;color:#888;">(GT FACS)</small></td>
+        <td>Disgust</td><td class="mono sig">+0.717 **</td><td class="mono">0.002</td>
+      </tr>
+      <tr><td>Happiness</td><td class="mono near-sig">+0.464 &dagger;</td><td class="mono">0.070</td></tr>
+      <tr><td>Sadness</td><td class="mono">+0.366</td><td class="mono">0.164</td></tr>
+      <tr><td>Surprise</td><td class="mono">+0.123</td><td class="mono">0.650</td></tr>
+      <tr><td>Fear</td><td class="mono">+0.085</td><td class="mono">0.755</td></tr>
+      <tr>
+        <td rowspan="3" style="vertical-align:top;padding-top:8px;font-weight:600;border-top:1px solid #ccc;">SMIC<br><small style="font-weight:400;color:#888;">(FLAME)</small></td>
+        <td style="border-top:1px solid #ccc;">Surprise</td>
+        <td class="mono sig" style="border-top:1px solid #ccc;">+0.510 *</td>
+        <td class="mono" style="border-top:1px solid #ccc;">0.044</td>
+      </tr>
+      <tr><td>Positive</td><td class="mono">+0.154</td><td class="mono">0.569</td></tr>
+      <tr><td>Negative</td><td class="mono">&minus;0.060</td><td class="mono">0.824</td></tr>
+    </tbody>
+    <tfoot>
+      <tr><td colspan="4">** p&lt;0.01 &nbsp; * p&lt;0.05 &nbsp; &dagger; p&lt;0.10</td></tr>
+    </tfoot>
+  </table>
+  <div class="figure medium">
+    <img src="images/heatmaps.png" alt="Emotion-specific blendshape activation heatmaps">
+    <figcaption><strong>Figure 3.</strong> Emotion-specific blendshape activation heatmaps on the OVR face mesh (112 clips, 21 participants). Red indicates high activation relative to neutral. The shared arousal component (leftmost) shows periocular activation common across all emotions.</figcaption>
+  </div>
+  <div class="figure xsmall">
+    <img src="images/cosine_similarity.png" alt="Inter-emotion cosine similarity matrix">
+    <figcaption><strong>Figure 2.</strong> Inter-emotion cosine similarity matrix from Quest Pro ME clips. Six basic emotions are distinguishable (d&prime; = 0.96). Fear is anti-correlated with disgust (r = &minus;0.81); anger and happiness show opposite valence patterns (r = &minus;0.76).</figcaption>
+  </div>
+</section>
+
+<section id="download">
+  <h2>Download</h2>
+  <p>Kindly use the links below to access the corresponding resources:</p>
+  <div class="dl-links">
+    <div><a href="YOUR_PAPER_LINK_HERE">[Paper]</a> &mdash; CVPR SVC 2026</div>
+    <div><span class="disabled">[Code]</span> &mdash; Coming soon on publication</div>
+    <div><span class="disabled">[Dataset]</span> &mdash; Coming soon on publication</div>
+  </div>
+  <p style="margin-top:1.25rem;">If you find our work useful, please consider citing:</p>
+  <div class="citation">@inproceedings{sribabu2026blendme,
+  title     = {BlendME: A VR Blendshape Microexpression Dataset
+               with Retrospective Self-Annotation},
+  author    = {Sribabu, Swethasree and Raj, Vishnu and
+               KV, Gouthaman and Muniyandi, Manivannan},
+  booktitle = {CVPR Workshop on Subtle Visual Computing (SVC)},
+  year      = {2026}
+}</div>
+  <p style="margin-top:1.25rem; color:#555;">This work was conducted at the Touchlab, Indian Institute of Technology Madras, in collaboration with Dolby Laboratories. The study was approved by the institutional ethics committee (IIT Madras).</p>
+</section>
+
+</div>
+
+<footer>
+  BlendME &middot; CVPR SVC 2026 &middot; IIT Madras &amp; Dolby Laboratories &middot;
+  <a href="mailto:am24s015@smail.iitm.ac.in">am24s015@smail.iitm.ac.in</a>
+</footer>
+
+</body>
+</html>
